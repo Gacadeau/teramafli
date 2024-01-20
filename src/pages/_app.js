@@ -21,8 +21,6 @@ export default function App({ Component, pageProps }) {
   const [load, setLoad] = useState(true)
   const [online, setOnline] = useState(true);
   const router = useRouter();
-  const router1 = useRouter();
-
   
   useEffect(()=>{
     const handleOnlineStatusChange = () =>{
@@ -31,8 +29,6 @@ export default function App({ Component, pageProps }) {
 
     window.addEventListener('online',handleOnlineStatusChange);
     window.addEventListener('offline',handleOnlineStatusChange);
-
-    setOnline(navigator.onLine);
 
     return () =>{
       window.removeEventListener('online' ,handleOnlineStatusChange);
@@ -44,12 +40,12 @@ export default function App({ Component, pageProps }) {
 useEffect(() => {
   
   if(!online){
-    router1.push('/downloads');
+    router.push('/downloads');
   }
   else{
     console.log('you are online');
   }
-},[online,router1]);
+},[online,router]);
 
   useEffect(() => {
     const handleRouteChange = (url) => {
