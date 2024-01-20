@@ -42,10 +42,11 @@ useEffect(() => {
   if(!online){
     router.push('/downloads');
   }
+  else{
+    console.log('you are offline');
+  }
 },[online,router]);
 
-  // like the video begin
-  // like clik
   const handleLike = (vidid, stats, like) => {
     const user = auto.session
     if (like !== 2) {
@@ -173,6 +174,7 @@ useEffect(() => {
   const video_Url = `https://teramafli.vercel.app/Videos/${video.Video}`;
 
   const handleDownload = async ()=> {    
+    console.log('video:',video);
     try {
       const cache = await caches.open('video-cache')
       const response = (await cache.match(video_Url)) || (await fetch(video_Url))
@@ -191,8 +193,6 @@ useEffect(() => {
       console.error('Erreur lors de la mise en cache de la vidéo :', error)
     }
   };
-
-
 
   const shareOnFacebook = () => {
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(videoUrl)}`;
