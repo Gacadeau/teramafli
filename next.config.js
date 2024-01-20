@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['www.teramaflix.com','teramafl.vercel.app'],
+    domains: ['teramafli.vercel.app'],
   },
 };
 

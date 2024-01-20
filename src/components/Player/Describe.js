@@ -18,7 +18,32 @@ function Describe({ video }) {
   const [noColor, setNoColor] = useState('text-slate-800')
   const [isCopied, setCopied] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [online, setOnline] = useState(true);
   const urlRef = React.useRef(null);
+
+  useEffect(()=>{
+    const handleOnlineStatusChange = () =>{
+      setOnline(navigator.onLine);
+    }
+
+    window.addEventListener('online',handleOnlineStatusChange);
+    window.addEventListener('offline',handleOnlineStatusChange);
+
+    setOnline(navigator.onLine);
+
+    return () =>{
+      window.removeEventListener('online' ,handleOnlineStatusChange);
+      window.removeEventListener('offline',handleOnlineStatusChange);
+    }
+
+  },[]);
+
+useEffect(() => {
+  if(!online){
+    router.push('/downloads');
+    return null;
+  }
+},[online,router]);
 
   // like the video begin
   // like clik
@@ -145,11 +170,10 @@ function Describe({ video }) {
     setCopied(false)
   };
 
-  //const videoUrl = `http://localhost:3000/Watch?v=${video.uniid}`;
 
-  const video_Url = `http://localhost:3000/Videos/${video.Video}`;
+  const video_Url = `https://teramafli.vercel.app/Videos/${video.Video}`;
 
-  const handleDownload = async () => {    
+  const handleDownload = async ()=> {    
     try {
       const cache = await caches.open('video-cache')
       const response = (await cache.match(video_Url)) || (await fetch(video_Url))
@@ -256,7 +280,6 @@ function Describe({ video }) {
                 </svg>
               </div>
             </div>
-
 
           </div>
           <div className='relative min-h-full py-2  lg:hidden'>

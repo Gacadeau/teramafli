@@ -147,7 +147,9 @@ function Navbar(props) {
 
   useEffect(() => {
     const available_notifications = async () => {
-      try {
+     if(auto.session)
+     {
+       try {
         const response = await fetch(`/api/notifications/${auto.session.ID}`);
         if (response.ok) {
           const data = await response.json();
@@ -156,6 +158,8 @@ function Navbar(props) {
       } catch (error) {
         console.log("Error => " + error);
       }
+     }
+      
     };
     available_notifications();
     const interval = setInterval(() => {

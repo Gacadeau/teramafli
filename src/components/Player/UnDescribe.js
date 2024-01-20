@@ -21,19 +21,18 @@ function UnDescribe ({ video }) {
   const [buttonAimeColor, setButtonAimeColor] = useState('')
   const [buttonAimepasColor, setButtonAimepasColor] = useState('')
 
-  const video_Url = `http://localhost:3000/Videos/${video.Video}`
+  const video_Url = `http://localhost:3000/Videos/${video.Video}`;
 
-  const handleDownload = async () => {
+  const handleDownload = async ()=> {    
     try {
       const cache = await caches.open('video-cache')
-      const response =
-        (await cache.match(video_Url)) || (await fetch(video_Url))
+      const response = (await cache.match(video_Url)) || (await fetch(video_Url))
       await cache.put(video_Url, response.clone())
-
+  
       // Lire la vidéo depuis le cache
       const blob = await cache.match(video_Url).then(res => res.blob())
       const url = window.URL.createObjectURL(blob)
-
+  
       // Créer un élément vidéo et jouer depuis le cache
       const videoElement = document.createElement('video')
       videoElement.src = url
@@ -42,7 +41,8 @@ function UnDescribe ({ video }) {
     } catch (error) {
       console.error('Erreur lors de la mise en cache de la vidéo :', error)
     }
-  }
+  };
+
   // test if liked api endpoint
   const fetchLikesReactions = useCallback(
     async id => {
