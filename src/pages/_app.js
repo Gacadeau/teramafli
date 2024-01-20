@@ -19,7 +19,36 @@ import Load from '@/components/Load'
 export default function App({ Component, pageProps }) {
   const [blur, setBlur] = useState(false)
   const [load, setLoad] = useState(true)
+  const [online, setOnline] = useState(true);
   const router = useRouter();
+
+  
+  useEffect(()=>{
+    const handleOnlineStatusChange = () =>{
+      setOnline(navigator.onLine);
+    };
+
+    window.addEventListener('online',handleOnlineStatusChange);
+    window.addEventListener('offline',handleOnlineStatusChange);
+
+    setOnline(navigator.onLine);
+
+    return () =>{
+      window.removeEventListener('online' ,handleOnlineStatusChange);
+      window.removeEventListener('offline',handleOnlineStatusChange);
+    }
+
+  },[]);
+
+useEffect(() => {
+  if(!online){
+    router.push('/downloads');
+  }
+  else{
+    console.log('you are online');
+  }
+},[online,router]);
+
   useEffect(() => {
     const handleRouteChange = (url) => {
       setLoad(true)

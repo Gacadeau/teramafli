@@ -18,35 +18,9 @@ function Describe({ video }) {
   const [noColor, setNoColor] = useState('text-slate-800')
   const [isCopied, setCopied] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [online, setOnline] = useState(true);
   const [downloading, setDownloading] = useState(false);
   const urlRef = React.useRef(null);
 
-  useEffect(()=>{
-    const handleOnlineStatusChange = () =>{
-      setOnline(navigator.onLine);
-    };
-
-    window.addEventListener('online',handleOnlineStatusChange);
-    window.addEventListener('offline',handleOnlineStatusChange);
-
-    setOnline(navigator.onLine);
-
-    return () =>{
-      window.removeEventListener('online' ,handleOnlineStatusChange);
-      window.removeEventListener('offline',handleOnlineStatusChange);
-    }
-
-  },[]);
-
-useEffect(() => {
-  if(!online){
-    router.push('/downloads');
-  }
-  else{
-    console.log('you are online');
-  }
-},[online,router]);
 
   const handleLike = (vidid, stats, like) => {
     const user = auto.session
