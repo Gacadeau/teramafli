@@ -21,6 +21,7 @@ export default function App({ Component, pageProps }) {
   const [load, setLoad] = useState(true)
   const [online, setOnline] = useState(true);
   const router = useRouter();
+  const router1 = useRouter();
 
   
   useEffect(()=>{
@@ -41,13 +42,14 @@ export default function App({ Component, pageProps }) {
   },[]);
 
 useEffect(() => {
+  
   if(!online){
-    router.push('/downloads');
+    router1.push('/downloads');
   }
   else{
     console.log('you are online');
   }
-},[online,router]);
+},[online,router1]);
 
   useEffect(() => {
     const handleRouteChange = (url) => {
