@@ -24,7 +24,7 @@ function Describe({ video }) {
   useEffect(()=>{
     const handleOnlineStatusChange = () =>{
       setOnline(navigator.onLine);
-    }
+    };
 
     window.addEventListener('online',handleOnlineStatusChange);
     window.addEventListener('offline',handleOnlineStatusChange);
@@ -41,7 +41,6 @@ function Describe({ video }) {
 useEffect(() => {
   if(!online){
     router.push('/downloads');
-    return null;
   }
 },[online,router]);
 

@@ -21,7 +21,7 @@ function UnDescribe ({ video }) {
   const [buttonAimeColor, setButtonAimeColor] = useState('')
   const [buttonAimepasColor, setButtonAimepasColor] = useState('')
 
-  const video_Url = `http://localhost:3000/Videos/${video.Video}`;
+  const video_Url = `https://teramafli.vercel.app/Videos/${video.Video}`;
 
   const handleDownload = async ()=> {    
     try {
