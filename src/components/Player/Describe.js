@@ -165,8 +165,14 @@ function Describe({ video }) {
       // Créer un élément vidéo et jouer depuis le cache
       const videoElement = document.createElement('video')
       console.log('videoElement:',videoElement);
-      videoElement.src = url
+      videoElement.src = url;
+      videoElement.id = video.ID;
+      videoElement.uniid = video.uniid;
+      videoElement.title = video.Title;
       console.log('videosrc:', videoElement.src );
+      console.log('videosrc:', videoElement.id );
+      console.log('videosrc:',  videoElement.uniid);
+      console.log('videosrc:',  videoElement.title);
       //document.body.appendChild(videoElement)
       //videoElement.play()
     } catch (error) {
