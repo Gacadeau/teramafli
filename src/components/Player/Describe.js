@@ -19,6 +19,7 @@ function Describe({ video }) {
   const [isCopied, setCopied] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [caching,setCaching] = useState([]);
   const urlRef = React.useRef(null);
 
 
@@ -148,34 +149,46 @@ function Describe({ video }) {
 
   const video_Url = `https://teramafli.vercel.app/Videos/${video.Video}`;
 
-  const handleDownload = async ()=> {    
-    console.log('video:',video);
-    setDownloading(true);
-    try {
-      const cache = await caches.open('video-cache')
-      const response = (await cache.match(video_Url)) || (await fetch(video_Url))
-      await cache.put(video_Url, response.clone())
-  
-      // Lire la vidéo depuis le cache
-      const blob = await cache.match(video_Url).then(res => res.blob())
-      console.log('blob:',blob);
-      const url = window.URL.createObjectURL(blob)
-      console.log('url:',url);
-  
-      // Créer un élément vidéo et jouer depuis le cache
-      const videoElement = document.createElement('video')
-      console.log('videoElement:',videoElement);
-      videoElement.src = url
-      console.log('videosrc:', videoElement.src );
-      //document.body.appendChild(videoElement)
-      //videoElement.play()
-    } catch (error) {
-      console.error('Erreur lors de la mise en cache de la vidéo :', error)
-    }
-    finally {
-      setDownloading(false);
-    }
-  };
+const handleDownload = async () => {    
+  console.log('video:', video);
+  setDownloading(true);
+
+  try {
+    const cache = await caches.open('video-cache');
+    const response = (await cache.match(video_Url)) || (await fetch(video_Url));
+    await cache.put(video_Url, response.clone());
+
+    // Lire la vidéo depuis le cache
+    const blob = await cache.match(video_Url).then(res => res.blob());
+    console.log('blob:', blob);
+    const url = window.URL.createObjectURL(blob);
+    console.log('url:', url);
+
+    // Créer un élément vidéo et jouer depuis le cache
+    const videoElement = document.createElement('video');
+    console.log('videoElement:', videoElement);
+    videoElement.src = url;
+    console.log('videosrc:', videoElement.src);
+
+    // Ajouter l'objet video au tableau caching
+    const updatedCaching = [...caching, video];
+    setCaching(updatedCaching);
+
+    // Stocker le tableau caching dans le cache
+    const cachingRequest = new Request('caching', {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      }),
+    });
+    const cachingResponse = new Response(JSON.stringify(updatedCaching));
+    await cache.put(cachingRequest, cachingResponse);
+  } catch (error) {
+    console.error('Erreur lors de la mise en cache de la vidéo :', error);
+  } finally {
+    setDownloading(false);
+  }
+};
 
   
   const shareOnFacebook = () => {
