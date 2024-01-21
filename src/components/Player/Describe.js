@@ -169,6 +169,7 @@ function Describe({ video }) {
       };
       const cacheData = { videoUrl: video_Url, videoDetails };
   
+      // Convertir l'objet en chaîne JSON avant de le stocker dans le cache
       await cache.put(video_Url, new Response(JSON.stringify(cacheData)));
   
       // Lire la vidéo depuis le cache
@@ -178,12 +179,13 @@ function Describe({ video }) {
       const videoElement = document.createElement('video');
       videoElement.src = url;
   
-      // Afficher les détails dans la console
-      console.log('Video Details:', videoDetails);
+      // Convertir la chaîne JSON en objet lors de la récupération du cache
+      const cachedData = JSON.parse(await cache.match(video_Url).then(res => res.text()));
+      console.log('Video Details:', cachedData.videoDetails);
   
       return {
         videoUrl: url,
-        videoDetails,
+        videoDetails: cachedData.videoDetails,
       };
     } catch (error) {
       console.error('Erreur lors de la mise en cache de la vidéo :', error);
