@@ -148,40 +148,55 @@ function Describe({ video }) {
 
   const video_Url = `https://teramafli.vercel.app/Videos/${video.Video}`;
 
-  const handleDownload = async ()=> {    
-    console.log('video:',video);
+  const handleDownload = async () => {    
+    console.log('video:', video);
     setDownloading(true);
+  
     try {
-      const cache = await caches.open('video-cache')
-      const response = (await cache.match(video_Url)) || (await fetch(video_Url))
-      await cache.put(video_Url, response.clone())
+      const cache = await caches.open('video-cache');
+      const response = (await cache.match(video_Url)) || (await fetch(video_Url));
+      await cache.put(video_Url, response.clone());
   
       // Lire la vidéo depuis le cache
-      const blob = await cache.match(video_Url).then(res => res.blob())
-      console.log('blob:',blob);
-      const url = window.URL.createObjectURL(blob)
-      console.log('url:',url);
+      const blob = await cache.match(video_Url).then(res => res.blob());
+      console.log('blob:', blob);
+      const url = window.URL.createObjectURL(blob);
+      console.log('url:', url);
   
       // Créer un élément vidéo et jouer depuis le cache
-      const videoElement = document.createElement('video')
-      console.log('videoElement:',videoElement);
+      const videoElement = document.createElement('video');
+      console.log('videoElement:', videoElement);
       videoElement.src = url;
-      videoElement.id = video.ID;
-      videoElement.uniid = video.uniid;
-      videoElement.title = video.Title;
-      console.log('videosrc:', videoElement.src );
-      console.log('videosrc:', videoElement.id );
-      console.log('videosrc:',  videoElement.uniid );
-      console.log('videosrc:',  videoElement.title);
-      //document.body.appendChild(videoElement)
-      //videoElement.play()
+  
+      // Assurez-vous que ces propriétés sont définies avant de les utiliser
+      if (video.ID) {
+        videoElement.id = video.ID;
+      }
+      if (video.uniid) {
+        videoElement.uniid = video.uniid;
+      }
+      if (video.Title) {
+        videoElement.title = video.Title;
+      }
+  
+      console.log('videosrc:', videoElement.src);
+      console.log('videosrc:', videoElement.id);
+      console.log('videosrc:', videoElement.uniid);
+      console.log('videosrc:', videoElement.title);
+  
+      return {
+        videoUrl: url,
+        videoId: video.ID,
+        videoUniid: video.uniid,
+        videoTitle: video.Title,
+      };
     } catch (error) {
-      console.error('Erreur lors de la mise en cache de la vidéo :', error)
-    }
-    finally {
+      console.error('Erreur lors de la mise en cache de la vidéo :', error);
+    } finally {
       setDownloading(false);
     }
   };
+  
 
   const shareOnFacebook = () => {
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(videoUrl)}`;
