@@ -29,6 +29,7 @@ export default function App({ Component, pageProps }) {
 
     window.addEventListener('online',handleOnlineStatusChange);
     window.addEventListener('offline',handleOnlineStatusChange);
+    setOnline(navigator.onLine);
 
     return () =>{
       window.removeEventListener('online' ,handleOnlineStatusChange);
