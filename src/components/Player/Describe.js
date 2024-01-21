@@ -148,13 +148,14 @@ function Describe({ video }) {
 
   const video_Url = `https://teramafli.vercel.app/Videos/${video.Video}`;
 
-const handleDownload = async () => {
+// Dans votre composant où vous avez la fonction handleDownload
+const handleDownload = async () => {    
   console.log('video:', video);
   setDownloading(true);
 
   try {
     const cache = await caches.open('video-cache');
-
+    
     // Créez une nouvelle requête avec les informations supplémentaires
     const request = new Request(video_Url, {
       method: 'GET',

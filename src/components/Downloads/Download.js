@@ -13,24 +13,28 @@ const CacheViewer = () => {
       const videoDataArray = cachedRequests.map(async (request) => {
         const videoUrl = request.url;
 
-        // Extraire les informations du cache associées à la vidéo
-        const videoInfoRequest = new Request(videoUrl + '-info');
-        const videoInfoResponse = await cache.match(videoInfoRequest);
-        const videoInfo = videoInfoResponse
-          ? JSON.parse(await videoInfoResponse.text())
-          : { id: '', uniid: '', title: '' };
+        // Vérifier si la clé se termine par "-info"
+        const isInfoKey = videoUrl.endsWith('-info');
 
-        // Retourner un objet contenant les informations nécessaires
+        // Si c'est une clé d'information, récupérer les informations
+        if (isInfoKey) {
+          const infoText = await cache.match(request).then(res => res.text());
+          console.log('Info for:', videoUrl, ' - ', infoText);
+          return null; // Retourner null pour ne pas inclure les infos dans la liste des vidéos
+        }
+
+        // Si ce n'est pas une clé d'information, récupérer les vidéos
         return {
           videoUrl,
-          videoId: videoInfo.id,
-          videoUniid: videoInfo.uniid,
-          videoTitle: videoInfo.title,
+          // Ajoutez d'autres propriétés que vous avez définies dans Describe.js
+          videoId: request.videoId, // Utilisez les informations existantes
+          videoUniid: request.videoUniid, // Utilisez les informations existantes
+          videoTitle: request.videoTitle, // Utilisez les informations existantes
         };
       });
 
-      // Attendre que toutes les informations soient récupérées avant de mettre à jour l'état
-      const videoDataArrayResolved = await Promise.all(videoDataArray);
+      // Filtrer les entrées nulles (informations) de la liste des vidéos
+      const videoDataArrayResolved = (await Promise.all(videoDataArray)).filter(videoData => videoData !== null);
       setCachedVideos(videoDataArrayResolved);
     };
 
