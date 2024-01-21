@@ -190,6 +190,33 @@ const handleDownload = async () => {
   }
 };
 
+
+// Dans votre composant React ou dans votre code JavaScript
+const displayCacheContent = async () => {
+  try {
+    const cache = await caches.open('video-cache');
+    const keys = await cache.keys();
+
+    // Filtrer les entrées du cache pour ne récupérer que celles liées aux vidéos
+    const videoCacheEntries = keys.filter(request => request.url.includes('/Videos/'));
+
+    // Récupérer les réponses associées aux entrées du cache vidéo
+    const videoCacheData = await Promise.all(videoCacheEntries.map(async request => {
+      const response = await cache.match(request);
+      const responseBody = await response.text();
+      return { url: request.url, response: responseBody };
+    }));
+
+    // Afficher les données du cache dans la console
+    console.log('Contenu du cache vidéo :', videoCacheData);
+  } catch (error) {
+    console.error('Erreur lors de la récupération du contenu du cache :', error);
+  }
+};
+
+// Appelez cette fonction pour afficher le contenu du cache dans la console
+displayCacheContent();
+
   
   const shareOnFacebook = () => {
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(videoUrl)}`;
