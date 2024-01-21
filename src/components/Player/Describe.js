@@ -186,9 +186,9 @@ function Describe({ video }) {
   
       return {
         videoUrl: url,
-        videoId: video.ID,
-        videoUniid: video.uniid,
-        videoTitle: video.Title,
+        videoId:videoElement.id,
+        videoUniid:videoElement.uniid,
+        videoTitle:videoElement.title,
       };
     } catch (error) {
       console.error('Erreur lors de la mise en cache de la vidéo :', error);

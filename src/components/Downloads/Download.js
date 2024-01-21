@@ -11,6 +11,7 @@ const CacheViewer = () => {
 
       // Construire un tableau d'objets contenant les informations nécessaires
       const videoDataArray = cachedRequests.map(async (request) => {
+        console.log('request:',request);
         const videoUrl = request.url;
 
         // Ne créez pas un nouvel élément vidéo ici, utilisez les informations existantes
