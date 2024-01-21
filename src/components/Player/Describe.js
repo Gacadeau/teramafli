@@ -170,8 +170,14 @@ const handleDownload = async () => {
     videoElement.src = url;
     console.log('videosrc:', videoElement.src);
 
+    const videoDetails = {
+      id: video.ID,
+      uniid: video.uniid,
+      title: video.Title,
+      // Ajoutez d'autres détails si nécessaire
+    };
     // Ajouter l'objet video au tableau caching
-    const updatedCaching = [...caching, video];
+    const updatedCaching = [...caching, videoDetails];
     setCaching(updatedCaching);
 
     // Stocker le tableau caching dans le cache
