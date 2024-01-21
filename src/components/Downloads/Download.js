@@ -9,10 +9,9 @@ const CacheViewer = () => {
       const cache = await caches.open('video-cache')
       const cachedRequests = await cache.keys()
 
-      const videoUrls = cachedRequests.map(request => {
-        request.url;
-        console.log('request:',request);
-      })
+      const videoUrls = cachedRequests.map(request => request.url)
+      const videoElement = cachedRequests.map(request => request);
+      console.log('videoelem:',videoElement);
       setCachedVideos(videoUrls)
     }
 
