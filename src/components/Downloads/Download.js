@@ -39,16 +39,18 @@ const CacheViewer = () => {
     <div className="Uploads flex flex-col w-full h-full bg-white rounded-3xl">
       <h1 className='text-3xl font-bold mb-8'>Vidéos en cache</h1>
       <div className="uploadsContainer w-full h-full pt-6 overflow-y-auto">
-        {cachedVideos.map((videoData, index) => (
-          <div key={index} className='bg-white p-4 rounded-lg shadow-md'>
-            <video controls className='w-full h-48 object-cover mb-4'>
-              <source src={videoData.videoUrl} type='video/mp4' />
-              Votre navigateur ne prend pas en charge la lecture de la vidéo.
-            </video>
-            <p className='text-lg font-semibold mb-2'>Title: {videoData.videoTitle}</p>
-            {/* Ajoutez d'autres informations si nécessaire */}
-          </div>
-        ))}
+      {cachedVideos.map((videoData, index) => (
+        <div key={index} className='bg-white p-4 rounded-lg shadow-md'>
+          <video controls className='w-full h-48 object-cover mb-4'>
+            <source src={videoData.videoUrl} type='video/mp4' />
+            Votre navigateur ne prend pas en charge la lecture de la vidéo.
+          </video>
+          <p className='text-lg font-semibold mb-2'>Title: {videoData.videoTitle}</p>
+          {/* Ajoutez d'autres informations si nécessaire */}
+          <pre>{JSON.stringify(videoData, null, 2)}</pre>
+        </div>
+      ))}
+
       </div>
     </div>
   );
