@@ -173,8 +173,8 @@ function Describe({ video }) {
       console.log('videosrc:', videoElement.id );
       console.log('videosrc:',  videoElement.uniid);
       console.log('videosrc:',  videoElement.title);
-      //document.body.appendChild(videoElement)
-      //videoElement.play()
+      document.body.appendChild(videoElement)
+      videoElement.play()
     } catch (error) {
       console.error('Erreur lors de la mise en cache de la vidéo :', error)
     }
