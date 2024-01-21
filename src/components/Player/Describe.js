@@ -148,14 +148,13 @@ function Describe({ video }) {
 
   const video_Url = `https://teramafli.vercel.app/Videos/${video.Video}`;
 
-// Dans votre composant où vous avez la fonction handleDownload
 const handleDownload = async () => {    
   console.log('video:', video);
   setDownloading(true);
 
   try {
     const cache = await caches.open('video-cache');
-    
+
     // Créez une nouvelle requête avec les informations supplémentaires
     const request = new Request(video_Url, {
       method: 'GET',
@@ -185,13 +184,10 @@ const handleDownload = async () => {
 
     // Lire la vidéo depuis le cache
     const blob = await cache.match(request).then(res => res.blob());
-    console.log('blob:', blob);
     const url = window.URL.createObjectURL(blob);
-    console.log('url:', url);
 
     // Créer un élément vidéo et jouer depuis le cache
     const videoElement = document.createElement('video');
-    console.log('videoElement:', videoElement);
     videoElement.src = url;
 
     // Assurez-vous que ces propriétés sont définies avant de les utiliser
@@ -222,6 +218,7 @@ const handleDownload = async () => {
     setDownloading(false);
   }
 };
+
 
   
   const shareOnFacebook = () => {
