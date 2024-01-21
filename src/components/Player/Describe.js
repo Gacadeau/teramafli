@@ -157,20 +157,27 @@ function Describe({ video }) {
       const cache = await caches.open('video-cache');
       const response = (await cache.match(video_Url)) || (await fetch(video_Url));
   
-      // Extraire le contenu du cache
-      const responseBody = await response.text();
+      // Lire le contenu du cache en tant que texte
+      const cachedData = await cache.match(video_Url).then(res => res.text());
   
-      // Stocker les détails de la vidéo dans le cache
-      const videoDetails = {
-        id: video.ID,
-        uniid: video.uniid,
-        title: video.Title,
-        // Ajoutez d'autres détails si nécessaire
-      };
-      const cacheData = { videoUrl: video_Url, videoDetails };
+      // Si le cache contient des données JSON valides, utilisez-les
+      // Sinon, stockez les détails de la vidéo dans le cache
+      let videoDetails;
+      try {
+        const parsedData = JSON.parse(cachedData);
+        videoDetails = parsedData.videoDetails;
+      } catch (error) {
+        console.error('Erreur lors de la conversion JSON :', error);
+        videoDetails = {
+          id: video.ID,
+          uniid: video.uniid,
+          title: video.Title,
+          // Ajoutez d'autres détails si nécessaire
+        };
   
-      // Convertir l'objet en chaîne JSON avant de le stocker dans le cache
-      await cache.put(video_Url, new Response(JSON.stringify(cacheData)));
+        // Convertir les détails de la vidéo en chaîne JSON avant de les stocker dans le cache
+        await cache.put(video_Url, new Response(JSON.stringify({ videoDetails })));
+      }
   
       // Lire la vidéo depuis le cache
       const blob = await cache.match(video_Url).then(res => res.blob());
@@ -179,13 +186,11 @@ function Describe({ video }) {
       const videoElement = document.createElement('video');
       videoElement.src = url;
   
-      // Convertir la chaîne JSON en objet lors de la récupération du cache
-      const cachedData = JSON.parse(await cache.match(video_Url).then(res => res.text()));
-      console.log('Video Details:', cachedData.videoDetails);
+      console.log('Video Details:', videoDetails);
   
       return {
         videoUrl: url,
-        videoDetails: cachedData.videoDetails,
+        videoDetails,
       };
     } catch (error) {
       console.error('Erreur lors de la mise en cache de la vidéo :', error);
