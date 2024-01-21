@@ -13,17 +13,19 @@ const CacheViewer = () => {
       const videoDataArray = cachedRequests.map(async (request) => {
         const videoUrl = request.url;
 
-        // Ajoutez d'autres informations à récupérer depuis la vidéo en cache
-        const videoBlob = await cache.match(request).then((res) => res.blob());
-        const videoElement = document.createElement('video');
-        videoElement.src = window.URL.createObjectURL(videoBlob);
+        // Extraire les informations du cache associées à la vidéo
+        const videoInfoRequest = new Request(videoUrl + '-info');
+        const videoInfoResponse = await cache.match(videoInfoRequest);
+        const videoInfo = videoInfoResponse
+          ? JSON.parse(await videoInfoResponse.text())
+          : { id: '', uniid: '', title: '' };
 
+        // Retourner un objet contenant les informations nécessaires
         return {
           videoUrl,
-          // Ajoutez d'autres propriétés que vous avez définies dans Describe.js
-          videoId: videoElement.id,
-          videoUniid: videoElement.uniid,
-          videoTitle: videoElement.title,
+          videoId: videoInfo.id,
+          videoUniid: videoInfo.uniid,
+          videoTitle: videoInfo.title,
         };
       });
 
@@ -47,8 +49,7 @@ const CacheViewer = () => {
             </video>
             <p className='text-lg font-semibold mb-2'>Title: {videoData.videoTitle}</p>
             {/* Ajoutez d'autres informations si nécessaire */}
-            <p className='text-lg font-semibold mb-2'>ID: {videoData.videoId}</p>
-            <p className='text-lg font-semibold mb-2'>UniID: {videoData.videoUniid}</p>
+            <pre>{JSON.stringify(videoData, null, 2)}</pre>
           </div>
         ))}
       </div>
