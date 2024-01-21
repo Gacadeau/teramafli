@@ -158,11 +158,15 @@ function Describe({ video }) {
   
       // Lire la vidéo depuis le cache
       const blob = await cache.match(video_Url).then(res => res.blob())
+      console.log('blob:',blob);
       const url = window.URL.createObjectURL(blob)
+      console.log('url:',url);
   
       // Créer un élément vidéo et jouer depuis le cache
       const videoElement = document.createElement('video')
+      console.log('videoElement:',videoElement);
       videoElement.src = url
+      console.log('videosrc:', videoElement.src );
       //document.body.appendChild(videoElement)
       //videoElement.play()
     } catch (error) {
