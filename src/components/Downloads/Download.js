@@ -11,6 +11,7 @@ const CacheViewer = () => {
 
       const videoUrls = cachedRequests.map(request => request.url)
       const videoElement = cachedRequests.map(request => request.videoElement)
+      console.log('videoelem:',videoElement);
       setCachedVideos(videoUrls)
     }
 
