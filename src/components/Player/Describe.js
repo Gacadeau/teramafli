@@ -149,52 +149,49 @@ function Describe({ video }) {
 
   const video_Url = `https://teramafli.vercel.app/Videos/${video.Video}`;
 
-const handleDownload = async () => {    
-  console.log('video:', video);
-  setDownloading(true);
-
-  try {
-    const cache = await caches.open('video-cache');
-    const response = (await cache.match(video_Url)) || (await fetch(video_Url));
-    await cache.put(video_Url, response.clone());
-
-    // Lire la vidéo depuis le cache
-    const blob = await cache.match(video_Url).then(res => res.blob());
-    console.log('blob:', blob);
-    const url = window.URL.createObjectURL(blob);
-    console.log('url:', url);
-
-    // Créer un élément vidéo et jouer depuis le cache
-    const videoElement = document.createElement('video');
-    console.log('videoElement:', videoElement);
-    videoElement.src = url;
-    console.log('videosrc:', videoElement.src);
-
-    const videoDetails = {
-      id: video.ID,
-      uniid: video.uniid,
-      title: video.Title,
-      // Ajoutez d'autres détails si nécessaire
-    };
-    // Ajouter l'objet video au tableau caching
-    const updatedCaching = [...caching, videoDetails];
-    setCaching(updatedCaching);
-
-    // Stocker le tableau caching dans le cache
-    const cachingRequest = new Request('caching', {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json',
-      }),
-    });
-    const cachingResponse = new Response(JSON.stringify(updatedCaching));
-    await cache.put(cachingRequest, cachingResponse);
-  } catch (error) {
-    console.error('Erreur lors de la mise en cache de la vidéo :', error);
-  } finally {
-    setDownloading(false);
-  }
-};
+  const handleDownload = async () => {
+    console.log('video:', video);
+    setDownloading(true);
+  
+    try {
+      const cache = await caches.open('video-cache');
+      const response = (await cache.match(video_Url)) || (await fetch(video_Url));
+  
+      // Extraire le contenu du cache
+      const responseBody = await response.text();
+  
+      // Stocker les détails de la vidéo dans le cache
+      const videoDetails = {
+        id: video.ID,
+        uniid: video.uniid,
+        title: video.Title,
+        // Ajoutez d'autres détails si nécessaire
+      };
+      const cacheData = { url: video_Url, response: responseBody, details: videoDetails };
+  
+      await cache.put(video_Url, new Response(JSON.stringify(cacheData)));
+  
+      // Lire la vidéo depuis le cache
+      const blob = await cache.match(video_Url).then(res => res.blob());
+      const url = window.URL.createObjectURL(blob);
+  
+      const videoElement = document.createElement('video');
+      videoElement.src = url;
+  
+      // Afficher les détails dans la console
+      console.log('Video Details:', videoDetails);
+  
+      return {
+        videoUrl: url,
+        videoDetails,
+      };
+    } catch (error) {
+      console.error('Erreur lors de la mise en cache de la vidéo :', error);
+    } finally {
+      setDownloading(false);
+    }
+  };
+  
 
 
 // Dans votre composant React ou dans votre code JavaScript
