@@ -45,7 +45,7 @@ const CacheViewer = () => {
               <source src={videoData.videoUrl} type='video/mp4' />
               Votre navigateur ne prend pas en charge la lecture de la vidéo.
             </video>
-            <p className='text-lg font-semibold mb-2'>{videoData.videoTitle}</p>
+            <p className='text-lg font-semibold mb-2'>Title: {videoData.videoTitle}</p>
             {/* Ajoutez d'autres informations si nécessaire */}
           </div>
         ))}
