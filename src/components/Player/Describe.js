@@ -167,7 +167,7 @@ function Describe({ video }) {
         title: video.Title,
         // Ajoutez d'autres détails si nécessaire
       };
-      const cacheData = { url: video_Url, response: responseBody, details: videoDetails };
+      const cacheData = { videoUrl: video_Url, videoDetails };
   
       await cache.put(video_Url, new Response(JSON.stringify(cacheData)));
   
@@ -191,6 +191,7 @@ function Describe({ video }) {
       setDownloading(false);
     }
   };
+  
   
 
 
