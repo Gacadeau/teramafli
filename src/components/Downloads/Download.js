@@ -16,22 +16,28 @@ const CacheViewer = () => {
         // Récupérer les informations du cache pour la vidéo
         const infoRequest = new Request(videoUrl + '-info');
         const infoResponse = await cache.match(infoRequest);
-        const infoText = await infoResponse.text();
-        const videoInfo = JSON.parse(infoText);
+        if (infoResponse) {
+          const infoText = await infoResponse.text();
+          const videoInfo = JSON.parse(infoText);
 
-        // Ne créez pas un nouvel élément vidéo ici, utilisez les informations existantes
-        return {
-          videoUrl,
-          // Utilisez les informations existantes
-          videoId: videoInfo.id,
-          videoUniid: videoInfo.uniid,
-          videoTitle: videoInfo.title,
-        };
+          // Ne créez pas un nouvel élément vidéo ici, utilisez les informations existantes
+          return {
+            videoUrl,
+            // Utilisez les informations existantes
+            videoId: videoInfo.id,
+            videoUniid: videoInfo.uniid,
+            videoTitle: videoInfo.title,
+          };
+        } else {
+          console.error('Info response not found for:', videoUrl);
+          return null;
+        }
       });
 
       // Attendre que toutes les informations soient récupérées avant de mettre à jour l'état
       const videoDataArrayResolved = await Promise.all(videoDataArray);
-      setCachedVideos(videoDataArrayResolved);
+      const filteredVideoDataArray = videoDataArrayResolved.filter(Boolean); // Filtrer les valeurs nulles
+      setCachedVideos(filteredVideoDataArray);
     };
 
     loadCachedVideos();
