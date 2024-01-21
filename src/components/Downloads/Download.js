@@ -11,16 +11,19 @@ const CacheViewer = () => {
 
       // Construire un tableau d'objets contenant les informations nécessaires
       const videoDataArray = cachedRequests.map(async (request) => {
-        console.log('request:',request);
         const videoUrl = request.url;
 
-        // Ne créez pas un nouvel élément vidéo ici, utilisez les informations existantes
+        // Ajoutez d'autres informations à récupérer depuis la vidéo en cache
+        const videoBlob = await cache.match(request).then((res) => res.blob());
+        const videoElement = document.createElement('video');
+        videoElement.src = window.URL.createObjectURL(videoBlob);
+
         return {
           videoUrl,
           // Ajoutez d'autres propriétés que vous avez définies dans Describe.js
-          videoId: request.videoId, // Utilisez les informations existantes
-          videoUniid: request.videoUniid, // Utilisez les informations existantes
-          videoTitle: request.videoTitle, // Utilisez les informations existantes
+          videoId: videoElement.id,
+          videoUniid: videoElement.uniid,
+          videoTitle: videoElement.title,
         };
       });
 
@@ -44,7 +47,8 @@ const CacheViewer = () => {
             </video>
             <p className='text-lg font-semibold mb-2'>Title: {videoData.videoTitle}</p>
             {/* Ajoutez d'autres informations si nécessaire */}
-            <pre>{JSON.stringify(videoData, null, 2)}</pre>
+            <p className='text-lg font-semibold mb-2'>ID: {videoData.videoId}</p>
+            <p className='text-lg font-semibold mb-2'>UniID: {videoData.videoUniid}</p>
           </div>
         ))}
       </div>
@@ -53,5 +57,3 @@ const CacheViewer = () => {
 };
 
 export default CacheViewer;
-
-

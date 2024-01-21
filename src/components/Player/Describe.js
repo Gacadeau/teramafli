@@ -168,6 +168,20 @@ function Describe({ video }) {
       const response = (await cache.match(request)) || (await fetch(request));
       await cache.put(request, response.clone());
   
+      // Stockez également les informations de la vidéo dans le cache
+      const videoInfo = {
+        id: video.ID,
+        uniid: video.uniid,
+        title: video.Title,
+      };
+      const videoInfoRequest = new Request(video_Url + '-info', {
+        method: 'GET',
+        headers: new Headers({
+          'video-info': JSON.stringify(videoInfo),
+        }),
+      });
+      await cache.put(videoInfoRequest, new Response('Video Info Cached'));
+  
       // Lire la vidéo depuis le cache
       const blob = await cache.match(request).then(res => res.blob());
       console.log('blob:', blob);
@@ -178,7 +192,6 @@ function Describe({ video }) {
       const videoElement = document.createElement('video');
       console.log('videoElement:', videoElement);
       videoElement.src = url;
-      videoElement.type = 'video/mp4';
   
       // Assurez-vous que ces propriétés sont définies avant de les utiliser
       if (video.ID) {
@@ -208,6 +221,7 @@ function Describe({ video }) {
       setDownloading(false);
     }
   };
+  
   
   const shareOnFacebook = () => {
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(videoUrl)}`;
