@@ -149,84 +149,34 @@ function Describe({ video }) {
 
   const video_Url = `https://teramafli.vercel.app/Videos/${video.Video}`;
 
-  const handleDownload = async () => {
-    console.log('video:', video);
+  const handleDownload = async ()=> {    
+    console.log('video:',video);
     setDownloading(true);
-  
     try {
-      const cache = await caches.open('video-cache');
-      const response = (await cache.match(video_Url)) || (await fetch(video_Url));
-  
-      // Lire le contenu du cache en tant que texte
-      const cachedData = await cache.match(video_Url).then(res => res.text());
-  
-      // Si le cache contient des données JSON valides, utilisez-les
-      // Sinon, stockez les détails de la vidéo dans le cache
-      let videoDetails;
-      try {
-        const parsedData = JSON.parse(cachedData);
-        videoDetails = parsedData.videoDetails;
-      } catch (error) {
-        console.error('Erreur lors de la conversion JSON :', error);
-        videoDetails = {
-          id: video.ID,
-          uniid: video.uniid,
-          title: video.Title,
-          // Ajoutez d'autres détails si nécessaire
-        };
-  
-        // Convertir les détails de la vidéo en chaîne JSON avant de les stocker dans le cache
-        await cache.put(video_Url, new Response(JSON.stringify({ videoDetails })));
-      }
+      const cache = await caches.open('video-cache')
+      const response = (await cache.match(video_Url)) || (await fetch(video_Url))
+      await cache.put(video_Url, response.clone())
   
       // Lire la vidéo depuis le cache
-      const blob = await cache.match(video_Url).then(res => res.blob());
-      const url = window.URL.createObjectURL(blob);
+      const blob = await cache.match(video_Url).then(res => res.blob())
+      console.log('blob:',blob);
+      const url = window.URL.createObjectURL(blob)
+      console.log('url:',url);
   
-      const videoElement = document.createElement('video');
-      videoElement.src = url;
-  
-      console.log('Video Details:', videoDetails);
-  
-      return {
-        videoUrl: url,
-        videoDetails,
-      };
+      // Créer un élément vidéo et jouer depuis le cache
+      const videoElement = document.createElement('video')
+      console.log('videoElement:',videoElement);
+      videoElement.src = url
+      console.log('videosrc:', videoElement.src );
+      //document.body.appendChild(videoElement)
+      //videoElement.play()
     } catch (error) {
-      console.error('Erreur lors de la mise en cache de la vidéo :', error);
-    } finally {
+      console.error('Erreur lors de la mise en cache de la vidéo :', error)
+    }
+    finally {
       setDownloading(false);
     }
   };
-  
-  
-
-
-// Dans votre composant React ou dans votre code JavaScript
-const displayCacheContent = async () => {
-  try {
-    const cache = await caches.open('video-cache');
-    const keys = await cache.keys();
-
-    // Filtrer les entrées du cache pour ne récupérer que celles liées aux vidéos
-    const videoCacheEntries = keys.filter(request => request.url.includes('/Videos/'));
-
-    // Récupérer les réponses associées aux entrées du cache vidéo
-    const videoCacheData = await Promise.all(videoCacheEntries.map(async request => {
-      const response = await cache.match(request);
-      const responseBody = await response.text();
-      return { url: request.url, response: responseBody };
-    }));
-
-    // Afficher les données du cache dans la console
-    console.log('Contenu du cache vidéo :', videoCacheData);
-  } catch (error) {
-    console.error('Erreur lors de la récupération du contenu du cache :', error);
-  }
-};
-
-// Appelez cette fonction pour afficher le contenu du cache dans la console
-displayCacheContent();
 
   
   const shareOnFacebook = () => {
