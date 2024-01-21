@@ -178,6 +178,7 @@ function Describe({ video }) {
       const videoElement = document.createElement('video');
       console.log('videoElement:', videoElement);
       videoElement.src = url;
+      videoElement.type = 'video/mp4';
   
       // Assurez-vous que ces propriétés sont définies avant de les utiliser
       if (video.ID) {
