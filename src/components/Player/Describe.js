@@ -154,12 +154,15 @@ function Describe({ video }) {
   
     try {
       const cache = await caches.open('video-cache');
+      
+      // Créez une nouvelle requête avec les informations supplémentaires
       const request = new Request(video_Url, {
         method: 'GET',
-        // Ajoutez des propriétés supplémentaires à la requête
-        videoId: video.ID,
-        videoUniid: video.uniid,
-        videoTitle: video.Title,
+        headers: new Headers({
+          'video-id': video.ID,
+          'video-uniid': video.uniid,
+          'video-title': video.Title,
+        }),
       });
   
       const response = (await cache.match(request)) || (await fetch(request));
@@ -204,6 +207,7 @@ function Describe({ video }) {
       setDownloading(false);
     }
   };
+  
   
   
 
