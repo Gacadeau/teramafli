@@ -154,11 +154,19 @@ function Describe({ video }) {
   
     try {
       const cache = await caches.open('video-cache');
-      const response = (await cache.match(video_Url)) || (await fetch(video_Url));
-      await cache.put(video_Url, response.clone());
+      const request = new Request(video_Url, {
+        method: 'GET',
+        // Ajoutez des propriétés supplémentaires à la requête
+        videoId: video.ID,
+        videoUniid: video.uniid,
+        videoTitle: video.Title,
+      });
+  
+      const response = (await cache.match(request)) || (await fetch(request));
+      await cache.put(request, response.clone());
   
       // Lire la vidéo depuis le cache
-      const blob = await cache.match(video_Url).then(res => res.blob());
+      const blob = await cache.match(request).then(res => res.blob());
       console.log('blob:', blob);
       const url = window.URL.createObjectURL(blob);
       console.log('url:', url);
@@ -186,9 +194,9 @@ function Describe({ video }) {
   
       return {
         videoUrl: url,
-        videoId:videoElement.id,
-        videoUniid:videoElement.uniid,
-        videoTitle:videoElement.title,
+        videoId: videoElement.id,
+        videoUniid: videoElement.uniid,
+        videoTitle: videoElement.title,
       };
     } catch (error) {
       console.error('Erreur lors de la mise en cache de la vidéo :', error);
@@ -196,6 +204,7 @@ function Describe({ video }) {
       setDownloading(false);
     }
   };
+  
   
 
   const shareOnFacebook = () => {
