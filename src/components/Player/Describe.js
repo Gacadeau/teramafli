@@ -147,34 +147,32 @@ function Describe({ video }) {
   };
 
 
-  const video_Url = `https://teramafli.vercel.app/Videos/${video.Video}`;
+ const video_Url = `https://teramafli.vercel.app/Videos/${video.Video}`;
 
-  const handleDownload = async ()=> {    
-    console.log('video:',video);
-    setDownloading(true);
+ const handleDownload = async () => {  
+    console.log('data:',video);
     try {
-      const cache = await caches.open('video-cache')
-      const response = (await cache.match(video_Url)) || (await fetch(video_Url))
-      await cache.put(video_Url, response.clone())
-  
-      // Lire la vidéo depuis le cache
-      const blob = await cache.match(video_Url).then(res => res.blob())
-      console.log('blob:',blob);
-      const url = window.URL.createObjectURL(blob)
-      console.log('url:',url);
-  
-      // Créer un élément vidéo et jouer depuis le cache
-      const videoElement = document.createElement('video')
-      console.log('videoElement:',videoElement);
-      videoElement.src = url
-      console.log('videosrc:', videoElement.src );
-      //document.body.appendChild(videoElement)
-      //videoElement.play()
+      console.log('data:',video)
+      const registration = await navigator.serviceWorker.ready;
+      const response = await fetch(video_Url);
+      const blob = await response.blob();
+
+      registration.active.postMessage({
+        type: 'CACHE_VIDEO',
+        url: video_Url,
+        blob,
+        name: video.Title,
+        body:video.Body,
+        page:video.PageName,
+        profil:video.Image,
+        create:video.Created_at,
+        Uuid:video.Uuid,
+        uniid:video.uniid
+      });
+
+      console.log('Video ajoutée au cache avec succès.');
     } catch (error) {
-      console.error('Erreur lors de la mise en cache de la vidéo :', error)
-    }
-    finally {
-      setDownloading(false);
+      console.error('Erreur lors du téléchargement de la vidéo:', error);
     }
   };
 
