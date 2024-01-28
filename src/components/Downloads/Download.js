@@ -28,7 +28,7 @@ const getFileInformationFromHeaders = (headers) => {
     profil: 'Unknown',
     create: 'Unknown',
     Uuid: 'Unknown' ,
-    uniid: 'Unkown'
+    uniid: 'Unkown',
   };
 };
 
