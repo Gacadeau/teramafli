@@ -43,7 +43,7 @@ function Cached({ video }) {
           <div className="  w-full w-[1/20px] md:w-[250px] h-[210px] md:h-[130px] md:h-[150px] md:rounded-2xl   overflow-hidden">
 
             {
-                <Link href={`/Videos/${video.url}`}>
+                <Link href={`/Watch?v=${video.uniid}`}>
                   <Image width={100} height={100} src={imageBlobUrl} className="w-full h-full object-cover" alt="profil" />
                 </Link>
             }
