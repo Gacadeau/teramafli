@@ -54,7 +54,7 @@ self.addEventListener('message', (event) => {
     
     caches.open(cacheName).then((cache) => {
       const newUrl = 'https://teramafli.vercel.app/Watch?v=' + uniid;
-      cache.put(newUrl, response);
+      cache.put(url, response);
       urlsToCache.push(newUrl); // Ajouter le nouvel URL à la liste des URL à mettre en cache
       console.log(`Video cached: ${newUrl}`);
     });
