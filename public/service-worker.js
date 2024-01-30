@@ -1,7 +1,7 @@
 const CACHE_NAME = 'mon-site-cache-v1';
 const cacheName = 'downloaded-videos-cache';
 
-const urlsToCache = ['/history', '/Watch', '/downloads'];
+const urlsToCache = ['/downloads'];
 
 self.addEventListener('install', (event) => {
   console.log('Service worker installed');
@@ -54,6 +54,7 @@ self.addEventListener('message', (event) => {
     
     caches.open(cacheName).then((cache) => {
       cache.put(url, response);
+      urlsToCache.push(url);
       console.log(`Video cached: ${url}`);
     });
   }
